@@ -1,0 +1,45 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      GITHUB_TOKEN=$(gcloud secrets versions access latest --secret="github-token")
+      echo "GITHUB_TOKEN=${GITHUB_TOKEN}" > /workspace/terraform_env_vars
+
+- name: 'hashicorp/terraform:1.5.7'
+  entrypoint: 'sh'
+  env:
+    - 'TF_INPUT=0'
+  args:
+    - '-c'
+    - |
+      export $(cat /workspace/terraform_env_vars | xargs)
+      terraform -chdir=envs/prod init -input=false
+
+- name: 'hashicorp/terraform:1.5.7'
+  entrypoint: 'sh'
+  env:
+    - 'TF_INPUT=0'
+  args:
+    - '-c'
+    - |
+      export $(cat /workspace/terraform_env_vars | xargs)
+      terraform -chdir=envs/prod plan -out=tfplan -input=false
+
+- name: 'hashicorp/terraform:1.5.7'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      if [ "$TF_APPLY" = "true" ]; then
+        export $(cat /workspace/terraform_env_vars | xargs)
+        terraform -chdir=envs/prod apply -input=false tfplan
+      else
+        echo "Skipping apply. Set TF_APPLY=true to apply."
+      fi
+
+substitutions:
+  _TF_APPLY: "false"
+
+timeout: "1200s"
