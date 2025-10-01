@@ -1,26 +1,22 @@
-variable "github_token" {
-  type        = string
-  description = "GitHub token with admin:org and repo permissions"
-  sensitive   = true
-}
-
-variable "github_org" {
-  type        = string
-  description = "GitHub organization name"
-}
-
-variable "tfstate_bucket" {
-  type        = string
-  description = "GCS bucket name for terraform state"
-}
-
 variable "teams" {
   type = map(object({
     description = string
     privacy     = string
     members     = list(string)
   }))
-  default = {}
+}
+
+variable "github_org" {
+  type = string
+}
+
+variable "tfstate_bucket" {
+  type = string
+}
+
+variable "github_token" {
+  type = string
+  sensitive = true
 }
 
 variable "repos" {
@@ -33,7 +29,6 @@ variable "repos" {
     has_wiki    = bool
     template    = bool
   }))
-  default = {}
 }
 
 variable "branch_protections" {
@@ -45,7 +40,6 @@ variable "branch_protections" {
     required_status_checks = list(string)
     enforce_admins = bool
   }))
-  default = {}
 }
 
 variable "labels" {
@@ -54,15 +48,12 @@ variable "labels" {
     color       = string
     description = string
   })))
-  default = {}
 }
 
 variable "permissions" {
-  description = "Map of permission blocks. Each block should have: repo (logical name), teams (map team_name->permission), users (map username->permission)"
   type = map(object({
     repo  = string
     teams = map(string)
     users = map(string)
   }))
-  default = {}
 }

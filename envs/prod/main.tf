@@ -18,3 +18,10 @@ module "labels" {
   source = "../../modules/labels"
   labels = var.labels
 }
+
+module "permissions" {
+  source = "../../modules/permissions"
+  permissions = var.permissions
+  repos       = module.repos.repo_names
+  team_ids    = module.teams.team_ids
+}

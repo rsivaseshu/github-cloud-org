@@ -1,3 +1,14 @@
+## Repository permissions automation
+
+This repository includes a `modules/permissions` Terraform module to attach team and user permissions to repositories.
+
+Quick usage:
+
+- Add entries to `envs/<env>/terraform.tfvars` under `permissions` (see `envs/prod/terraform.tfvars` for an example).
+- The module will validate that referenced repos and teams exist and that permission strings are valid.
+
+CI: run `cloudbuild-permissions.yaml` (or `cloudbuild.yaml`) to plan and optionally apply. The apply step is gated with the `_TF_APPLY` substitution; set it to "true" when you really want to apply.
+
 # GitHub Org As Code — Terraform-first (with optional Python helper)
 
 ## Overview
