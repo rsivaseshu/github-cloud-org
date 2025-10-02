@@ -57,3 +57,11 @@ variable "permissions" {
     users = map(string)
   }))
 }
+
+variable "codeowners" {
+  type = map(object({
+    repository = string
+    entries    = map(list(string))
+  }))
+  default = {}
+}

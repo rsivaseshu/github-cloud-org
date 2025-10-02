@@ -25,3 +25,9 @@ module "permissions" {
   repos       = module.repos.repo_names
   team_ids    = module.teams.team_ids
 }
+
+module "codeowners" {
+  source = "../../modules/codeowners"
+  codeowners = var.codeowners
+  repos = module.repos.repo_names
+}

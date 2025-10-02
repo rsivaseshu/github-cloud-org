@@ -29,6 +29,19 @@ steps:
 
 - name: 'hashicorp/terraform:1.5.7'
   entrypoint: 'sh'
+  env:
+    - 'TF_INPUT=0'
+  args:
+    - '-c'
+    - |
+      export $(cat /workspace/terraform_env_vars | xargs)
+      # Show generated CODEOWNERS content from plan by inspecting module outputs after plan
+      terraform -chdir=envs/prod output -json || true
+      # If you have jq installed in the image you can pretty-print specific outputs, e.g.:
+      # terraform -chdir=envs/prod output -json | jq '.codeowners_generated'
+
+- name: 'hashicorp/terraform:1.5.7'
+  entrypoint: 'sh'
   args:
     - '-c'
     - |
