@@ -1,0 +1,30 @@
+# Default owners for everything in the repo
+* @org/infra-team @alice
+
+###########################################
+# Owners for the ghec project code and config
+/ghec/ @org/ghec-maintainers @bob
+
+# Owners for repository configuration and automation
+/.github/ @org/infra-team
+/config/** @org/infra-team @infra-user
+
+# Owners for docs
+/docs/ @org/docs-team @carol
+
+# Fallback for everything else
+* @org/eng-leads
+
+#######################################################
+# Owners for the ghec project code and config
+/ghec/ @org/ghec-maintainers @bob
+
+# Owners for repository configuration and automation
+/.github/ @org/infra-team
+/config/** @org/infra-team @infra-user
+
+# Owners for docs
+/docs/ @org/docs-team @carol
+
+# Fallback for everything else
+* @org/eng-leads
