@@ -29,15 +29,26 @@ steps:
 
 - name: 'hashicorp/terraform:1.5.7'
   entrypoint: 'sh'
+  env:
+    - 'TF_INPUT=0'
+    - 'TF_APPLY=${_TF_APPLY}'
+    - 'PR_NUMBER=${PR_NUMBER}'
+    - '_PR_NUMBER=${_PR_NUMBER}'
   args:
     - '-c'
     - |
-      if [ "$TF_APPLY" = "true" ]; then
+      # If this is a PR build (PR_NUMBER or _PR_NUMBER is set by triggers),
+      # we should never apply infrastructure changes from a pre-merge PR.
+      if [ -n "${PR_NUMBER:-}" ] || [ -n "${_PR_NUMBER:-}" ]; then
+        PR_VAL="${PR_NUMBER:-${_PR_NUMBER}}"
+        echo "PR build detected (PR_NUMBER=${PR_VAL}) - skipping terraform apply."
+      elif [ "${TF_APPLY:-false}" = "true" ]; then
         export $(cat /workspace/terraform_env_vars | xargs)
         terraform -chdir=envs/prod apply -input=false tfplan
       else
-        echo "Skipping apply. Set TF_APPLY=true to apply."
+        echo "Skipping apply. Set the substitution _TF_APPLY=true on the trigger to enable apply."
       fi
+
 
 substitutions:
   _TF_APPLY: "false"
